@@ -9,7 +9,7 @@ locals
 }
 
 
-module ec2-instance-role-profile
+module ec2-instance-profile
 {
     source = ".."
 
@@ -29,8 +29,8 @@ resource aws_instance server
     instance_type          = "t2.micro"
     vpc_security_group_ids = [ "${ module.security-group.out_security_group_id }" ]
     subnet_id              = "${ element( module.vpc-network.out_subnet_ids, count.index ) }"
-    iam_instance_profile   = "${ module.s3-instance-profile.out_profile_name }"
-###############    user_data              = "${ data.template_file.cloud_config.rendered }"
+    iam_instance_profile   = "${ module.ec2-instance-profile.out_ec2_instance_profile }"
+    user_data              = "${ data.template_file.cloud_config.rendered }"
 
     tags
     {
@@ -48,6 +48,10 @@ data template_file iam_policy_stmts
     template = "${ file( "${path.module}/ec2.profile-policy-stmts.json" ) }"
 }
 
+data template_file cloud_config
+{
+    template = "${ file( "${path.module}/cloud-config.yaml" ) }"
+}
 
 module vpc-network
 {
@@ -77,4 +81,23 @@ module security-group
 module resource-tags
 {
     source = "github.com/devops4me/terraform-aws-resource-tags"
+}
+
+data aws_ami ubuntu-1804
+{
+    most_recent = true
+
+    filter
+    {
+        name   = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+    }
+
+    filter
+    {
+        name   = "virtualization-type"
+        values = [ "hvm" ]
+    }
+
+    owners = ["099720109477"]
 }
