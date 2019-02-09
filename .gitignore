@@ -4,13 +4,11 @@
 # system binary.
 **/.terraform/*
 
+
 # Ignore all files produced to hold and backup state which
 # includes terraform.tfstate and terraform.tfstate.backup
 *.tfstate
 *.tfstate.*
-
-# Until the SSH public keys are removed do not check me in.
-cloud-config.yaml
 
 
 # When terraform crashes it can leave this file behind.

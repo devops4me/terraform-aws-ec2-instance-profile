@@ -4,6 +4,8 @@
 
 # ec2 instance role profile | iam policy statements
 
+**We want our ec2 instances to inherit access to AWS resources like S3 buckets, ECS repositories, CloudFront and AWS ElasticSearch. We use roles to avoid explicitly passing IAM credentials into ec2 instances.**
+
 Pass in chunk of AWS (json formatted) policy statements in the variable **`in_policy_stmts`** and reap the **`out_ec2_instance_profile`** that can be fed into the **`iam_instance_profile`** property of the **`aws_instance`** resource.
 
 ## Usage
