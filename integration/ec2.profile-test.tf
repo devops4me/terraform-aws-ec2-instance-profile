@@ -29,7 +29,7 @@ resource aws_instance server
     instance_type          = "t2.micro"
     vpc_security_group_ids = [ "${ module.security-group.out_security_group_id }" ]
     subnet_id              = "${ element( module.vpc-network.out_subnet_ids, count.index ) }"
-    iam_instance_profile   = "${ module.ec2-instance-profile.out_ec2_instance_profile }"
+    iam_instance_profile   = "${ module.ec2-instance-profile.out_instance_profile_id }"
     user_data              = "${ data.template_file.cloud_config.rendered }"
 
     tags

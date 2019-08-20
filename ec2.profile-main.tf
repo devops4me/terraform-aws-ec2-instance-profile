@@ -6,10 +6,9 @@
  | -- the in_policy_stmts variable.
  | --
 */
-resource aws_iam_role ec2_instance_role
-{
+resource aws_iam_role ec2_instance_role {
     name               = "ec2-role-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-    assume_role_policy = "${ file( "${path.module}/ec2.profile-role.json" ) }"
+    assume_role_policy = file( "${path.module}/ec2.profile-role.json" )
 }
 
 
@@ -24,11 +23,10 @@ resource aws_iam_role ec2_instance_role
  | -- get a head start by knowing which infrastructure to focus on compromising.
  | --
 */
-resource aws_iam_role_policy ec2_instance_policy
-{
-    name        = "ec2-policy-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-    role = "${ aws_iam_role.ec2_instance_role.id }"
-    policy = "${ var.in_policy_stmts }"
+resource aws_iam_role_policy ec2_instance_policy {
+    name   = "ec2-policy-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+    role   = aws_iam_role.ec2_instance_role.id
+    policy = var.in_policy_stmts
 }
 
 
@@ -36,12 +34,11 @@ resource aws_iam_role_policy ec2_instance_policy
  | -- This is the instance profile whose ID is given to whichever aws_instance
  | -- resource that needs to gain access as per the above policy statements.
  | --
- | -- The output variable [out_ec2_instance_profile] uses this resource.
+ | -- The output variable [out_instance_profile_id] uses this resource.
  | --    ${ aws_iam_instance_profile.ec2_instance_profile.id }
  | --
 */
-resource aws_iam_instance_profile ec2_instance_profile
-{
-    name  = "ec2-profile-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-    role = "${aws_iam_role.ec2_instance_role.name}"
+resource aws_iam_instance_profile ec2_instance_profile {
+    name = "ec2-profile-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+    role = aws_iam_role.ec2_instance_role.name
 }
